@@ -14,7 +14,6 @@ def banner():
 ╚███╔███╔╝╚██████╔╝██║ ╚═╝ ██║██║     ╚██████╔╝███████║███████║███████║
  ╚══╝╚══╝  ╚═════╝ ╚═╝     ╚═╝╚═╝      ╚═════╝ ╚══════╝╚══════╝╚══════╝
 
-
 """
     print(font)
 
@@ -45,7 +44,19 @@ def draw(State, notification: bool = False):
     if notification:
         goldFound()
 
+def drawStartGame(State, options, selectedOption):
+    clearScreen()
+    banner()
+    print("Welcome to the Wumpus World Game!\n")
+    print("[bold]Select the grid size[/]")
+    print("\nControls:")
+    print("Enter = Select, w = up, s = down, q = quit\n")
 
+    for i in options:
+        if i == options[selectedOption]:
+            print(f"[bold yellow]> {i}[/]")
+        else:
+            print("> ",i)
 
 def drawEndGame(State):
     clearScreen()

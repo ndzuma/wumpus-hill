@@ -3,7 +3,7 @@ import time
 import platform
 from itertools import count
 from typing import List, Optional
-from display import draw_grid, draw, clearScreen, drawEndGame
+from display import draw_grid, draw, clearScreen, drawEndGame, drawStartGame
 import random
 
 
@@ -159,18 +159,32 @@ def getUserInput():
         import msvcrt
         while True:
                 if msvcrt.kbhit():  # Check if a key has been pressed
-                    key = msvcrt.getch().decode('utf-8')  # Get the keypress and decode it
-                    return key.upper()  # Return uppercase for consistency
+                    first_char = msvcrt.getch()
+                    if first_char == b'\xe0':  # Special keys (like arrow keys)
+                        second_char = msvcrt.getch()
+                        if second_char == b'H':  # Up arrow key
+                            return 'UP'
+                        elif second_char == b'P':  # Down arrow key
+                            return 'DOWN'
+                    else:
+                        return first_char.decode('utf-8').upper()  # Return uppercase for consistency
     else:
         import sys, tty, termios
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
         try:
-            tty.setraw(sys.stdin.fileno())
+            tty.setraw(fd)
             ch = sys.stdin.read(1)
+            if ch == '\x1b':  # Escape sequence (arrow keys)
+                ch += sys.stdin.read(2)  # Read the next two characters
+                if ch == '\x1b[A':  # Up arrow key
+                    return 'UP'
+                elif ch == '\x1b[B':  # Down arrow key
+                    return 'DOWN'
+            else:
+                return ch.upper()
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch.upper()
 
 def movePlayer(State, move):
     # Game controls
@@ -255,20 +269,46 @@ def update(State):
     else:
         print("You can't move there, mate!")
 
+def start(state):
+    options = ["3X3", "5X5", "10X10", "15X15"]
+    option = 0
+    while True:
+        drawStartGame(state, options, option)
+        input = getUserInput()
+        if input == "W" or input == "UP":
+            if option == 0:
+                option = len(options) - 1
+            else:
+                option -= 1
+        elif input == "S" or input == "DOWN":
+            if option == len(options) - 1:
+                option = 0
+            else:
+                option += 1
+        elif input == "Q":
+            print("Are you sure you want to quit? (y/n)")
+            quitGame = getUserInput()
+            if quitGame == "\r" or quitGame == "\n" or quitGame == "Y":
+                print("Game Over!")
+                os._exit(1)
+        elif input == "\r" or input == "\n":
+            state.gridSize = int(options[option].split("X")[0])
+            break
+
 def main():
-    State = GameState()
+    state = GameState()
+    start(state)
     # make sure the grid has at least a 3x3 grid size, for it to work properly
-    State.gridSize = 5
-    State.grid, playerLocation = generateGrid(State.gridSize)
-    State.grid, State.goldCount = generateGold(State.grid, State.gridSize)
-    State.playersLocation, State.newPlayersLocation = playerLocation, playerLocation
-    State.grid, State.hurdleCount = generateHurdles(State.grid, State.gridSize)
+    state.grid, playerLocation = generateGrid(state.gridSize)
+    state.grid, state.goldCount = generateGold(state.grid, state.gridSize)
+    state.playersLocation, state.newPlayersLocation = playerLocation, playerLocation
+    state.grid, state.hurdleCount = generateHurdles(state.grid, state.gridSize)
 
     while True:
-        draw(State)
+        draw(state)
         move = getUserInput()
-        movePlayer(State, move)
-        update(State)
+        movePlayer(state, move)
+        update(state)
 
 
 if __name__ == "__main__":
