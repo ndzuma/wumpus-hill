@@ -29,6 +29,7 @@ class Position():
     isBreeze = False
     isStench = False
     isStartPosition = False
+    hasVisited = False
 
     def __init__(
         self,
@@ -38,7 +39,8 @@ class Position():
         isPit: Optional[bool] = False,
         isBreeze: Optional[bool] = False,
         isStench: Optional[bool] = False,
-        isStartPosition: Optional[bool] = False
+        isStartPosition: Optional[bool] = False,
+        hasVisited: Optional[bool] = False
     ):
         self.isPlayer = isPlayer
         self.isWumpus = isWumpus
@@ -47,6 +49,10 @@ class Position():
         self.isBreeze = isBreeze
         self.isStench = isStench
         self.isStartPosition = isStartPosition
+        self.hasVisited = hasVisited
+
+    def hasBeenVisited(self):
+        self.hasVisited = True
 
     def placePlayer(self):
         self.isPlayer = True
@@ -63,7 +69,10 @@ class Position():
     def addBreeze(self):
         self.isBreeze = True
 
-    def isClear(self):
+    def isClear(self, semiClear: Optional[bool]=False):
+        # semiClear is used to check if the position is clear excluding the stench and breeze attributes
+        if semiClear:
+            return not self.isPlayer and not self.isWumpus and not self.isGold and not self.isPit  and not self.isStartPosition
         return not self.isPlayer and not self.isWumpus and not self.isGold and not self.isPit and not self.isBreeze and not self.isStench and not self.isStartPosition
 
 def generateGrid(size):
@@ -73,7 +82,7 @@ def generateGrid(size):
         yAxis = random.randint(0, size - 1)
     else:
         yAxis = random.choice([0, size - 1])
-    grid[xAxis][yAxis] = Position(isPlayer=True, isStartPosition=True)
+    grid[xAxis][yAxis] = Position(isPlayer=True, isStartPosition=True, hasVisited=True)
     playersLocation = (xAxis, yAxis)
     return grid, playersLocation
 
@@ -81,6 +90,7 @@ def generateHurdles(grid, gridSize):
     # 25% of the grid will have a hurdle
     maxHurdles = int((gridSize**2)*0.25)
     hurdleCount = 0
+    clearZone = []
 
     for i in range(maxHurdles):
         while True:
@@ -93,22 +103,39 @@ def generateHurdles(grid, gridSize):
         hurdle = random.randint(1, 2)
         if hurdle== 1:
             grid[xAxis][yAxis] = Position(isWumpus=True)
+            if xAxis > 0:
+                grid[xAxis-1][yAxis].addStench()
+            if xAxis < gridSize - 1:
+                grid[xAxis+1][yAxis].addStench()
+            if yAxis > 0:
+                grid[xAxis][yAxis-1].addStench()
+            if yAxis < gridSize - 1:
+                grid[xAxis][yAxis+1].addStench()
         else:
             grid[xAxis][yAxis] = Position(isPit=True)
+            if xAxis > 0:
+                grid[xAxis-1][yAxis].addBreeze()
+            if xAxis < gridSize - 1:
+                grid[xAxis+1][yAxis].addBreeze()
+            if yAxis > 0:
+                grid[xAxis][yAxis-1].addBreeze()
+            if yAxis < gridSize - 1:
+                grid[xAxis][yAxis+1].addBreeze()
 
     return grid, hurdleCount
 
 def generateGold(grid, gridSize):
     maxGold = int((gridSize**2)*0.05)
-    if maxGold == 0:
-        maxGold = 1
+    if maxGold <= 1:
+        # At least 1 gold should be present
+        maxGold = random.randint(1, 2)
     goldCount = 0
 
     for i in range(maxGold):
         while True:
             xAxis = random.randint(0, gridSize - 1)
             yAxis = random.randint(0, gridSize - 1)
-            if grid[xAxis][yAxis].isClear():
+            if grid[xAxis][yAxis].isClear(True):
                 goldCount += 1
                 break
 
@@ -193,11 +220,12 @@ def update(State):
     def move():
         grid[playerLocation[0]][playerLocation[1]].removePlayer()
         grid[newPlayerLocation[0]][newPlayerLocation[1]].placePlayer()
+        grid[newPlayerLocation[0]][newPlayerLocation[1]].hasBeenVisited()
         State.playersLocation = newPlayerLocation
         State.playersPoints -= 1
         State.movesTaken += 1
 
-    if grid[newPlayerLocation[0]][newPlayerLocation[1]].isClear():
+    if grid[newPlayerLocation[0]][newPlayerLocation[1]].isClear(True):
         move()
     elif grid[newPlayerLocation[0]][newPlayerLocation[1]].isWumpus:
         move()
@@ -217,6 +245,7 @@ def update(State):
         State.playersPoints += 1000
         State.goldCount -= 1
         State.playersGold += 1
+        draw(State, True)
     elif grid[newPlayerLocation[0]][newPlayerLocation[1]].isStartPosition and not grid[playerLocation[0]][playerLocation[1]].isStartPosition:
         move()
         print("You're back to the start!")
@@ -228,14 +257,14 @@ def update(State):
 
 def main():
     State = GameState()
-    State.gridSize = 10
+    # make sure the grid has at least a 3x3 grid size, for it to work properly
+    State.gridSize = 5
     State.grid, playerLocation = generateGrid(State.gridSize)
     State.grid, State.goldCount = generateGold(State.grid, State.gridSize)
     State.playersLocation, State.newPlayersLocation = playerLocation, playerLocation
     State.grid, State.hurdleCount = generateHurdles(State.grid, State.gridSize)
 
     while True:
-        clearScreen()
         draw(State)
         move = getUserInput()
         movePlayer(State, move)
