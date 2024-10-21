@@ -1,7 +1,7 @@
 import os
 import time
 from rich import print
-from typing import List
+from typing import List, Optional
 from subprocess import call
 
 def banner():
@@ -68,11 +68,48 @@ def drawEndGame(State):
     print("Hints used: ", State.hintCount)
 
     print("\nLast frame:\n")
-    draw_grid(State.gridSize, State.grid)
+    draw_grid(State.gridSize, State.grid, True)
     print("\nGame Over!\n")
 
+def theBoard(grid: List[List[int]], x, y):
+    line2 = ""
+    if grid[x][y].isClear():
+        line2+= "|      "
+    elif grid[x][y].isPlayer:
+        if grid[x][y].isBreeze and grid[x][y].isStench:
+            line2+= "| 🧍🏽‍♂️ [red]bs[/]"
+        elif grid[x][y].isBreeze:
+            line2+= "|  🧍🏽‍♂️ [red]b[/]"
+        elif grid[x][y].isStench:
+            line2+= "|  🧍🏽‍♂️ [red]s[/]"
+        else:
+            line2+= "|  🧍🏽‍♂️  "
+    elif grid[x][y].isStartPosition:
+        line2+= "|  🏠  "
+    elif grid[x][y].isWumpus:
+        line2+= "|   W  "
+    elif grid[x][y].isGold:
+        if grid[x][y].isBreeze and grid[x][y].isStench:
+            line2+= "|[yellow]Gld[/] [red]bs[/]"
+        elif grid[x][y].isBreeze:
+            line2+= "| [yellow]Gld[/] [red]b[/]"
+        elif grid[x][y].isStench:
+            line2+= "| [yellow]Gld[/] [red]s[/]"
+        else:
+            line2+= "|  [yellow]Gld[/] "
+    elif grid[x][y].isPit:
+        line2+= "|  Pi  "
+    elif grid[x][y].isBreeze and grid[x][y].isStench:
+        line2+= "|  [red]bs[/]  "
+    elif grid[x][y].isBreeze:
+        line2+= "|   [red]b[/]  "
+    elif grid[x][y].isStench:
+        line2+= "|   [red]s[/]  "
+    else:
+        line2+= "|     "
+    return line2
 
-def draw_grid(size: int, grid: List[List[int]]):
+def draw_grid(size: int, grid: List[List[int]], seeGrid: Optional[bool] = False):
     line1 = ""
     for i in range(size):
         line1+= "+⎯⎯⎯⎯⎯⎯"
@@ -82,43 +119,13 @@ def draw_grid(size: int, grid: List[List[int]]):
     for x in range(size):
         line2 = ""
         for y in range(size):
-            if grid[x][y].hasVisited:
-                if grid[x][y].isClear():
-                    line2+= "|      "
-                elif grid[x][y].isPlayer:
-                    if grid[x][y].isBreeze and grid[x][y].isStench:
-                        line2+= "| 🧍🏽‍♂️ [red]bs[/]"
-                    elif grid[x][y].isBreeze:
-                        line2+= "|  🧍🏽‍♂️ [red]b[/]"
-                    elif grid[x][y].isStench:
-                        line2+= "|  🧍🏽‍♂️ [red]s[/]"
-                    else:
-                        line2+= "|  🧍🏽‍♂️  "
-                elif grid[x][y].isStartPosition:
-                    line2+= "|  🏠  "
-                elif grid[x][y].isWumpus:
-                    line2+= "|   W  "
-                elif grid[x][y].isGold:
-                    if grid[x][y].isBreeze and grid[x][y].isStench:
-                        line2+= "|[yellow]Gld[/] [red]bs[/]"
-                    elif grid[x][y].isBreeze:
-                        line2+= "| [yellow]Gld[/] [red]b[/]"
-                    elif grid[x][y].isStench:
-                        line2+= "| [yellow]Gld[/] [red]s[/]"
-                    else:
-                        line2+= "|  [yellow]Gld[/] "
-                elif grid[x][y].isPit:
-                    line2+= "|  Pi  "
-                elif grid[x][y].isBreeze and grid[x][y].isStench:
-                    line2+= "|  [red]bs[/]  "
-                elif grid[x][y].isBreeze:
-                    line2+= "|   [red]b[/]  "
-                elif grid[x][y].isStench:
-                    line2+= "|   [red]s[/]  "
-                else:
-                    line2+= "|     "
+            if seeGrid:
+                line2 += theBoard(grid, x, y)
             else:
-                line2+= "|   ?  "
+                if grid[x][y].hasVisited:
+                    line2 += theBoard(grid, x, y)
+                else:
+                    line2+= "|   ?  "
             if y == size - 1:
                 line2+= "|"
         print(line1)
