@@ -21,6 +21,7 @@ class GameState():
     gridSize: int
     grid: List[List]
 
+
 class Position():
     isPlayer = False
     isWumpus = False
@@ -75,6 +76,7 @@ class Position():
             return not self.isPlayer and not self.isWumpus and not self.isGold and not self.isPit  and not self.isStartPosition
         return not self.isPlayer and not self.isWumpus and not self.isGold and not self.isPit and not self.isBreeze and not self.isStench and not self.isStartPosition
 
+
 def generateGrid(size):
     grid = [[Position() for _ in range(size)] for _ in range(size)]
     xAxis = random.randint(0, size - 1)
@@ -84,21 +86,27 @@ def generateGrid(size):
         yAxis = random.choice([0, size - 1])
     grid[xAxis][yAxis] = Position(isPlayer=True, isStartPosition=True, hasVisited=True)
     playersLocation = (xAxis, yAxis)
-    return grid, playersLocation
+    playerAdjacentPositions = [
+        (xAxis, yAxis - 1),
+        (xAxis, yAxis + 1),
+        (xAxis - 1, yAxis),
+        (xAxis + 1, yAxis)
+    ]
+    return grid, playersLocation, playerAdjacentPositions
 
-def generateHurdles(grid, gridSize):
+def generateHurdles(grid, gridSize, playerAdjacentPositions):
     # 25% of the grid will have a hurdle
     maxHurdles = int((gridSize**2)*0.25)
     hurdleCount = 0
-    clearZone = []
 
     for i in range(maxHurdles):
         while True:
             xAxis = random.randint(0, gridSize - 1)
             yAxis = random.randint(0, gridSize - 1)
-            if grid[xAxis][yAxis].isClear():
-                hurdleCount += 1
-                break
+            if (xAxis, yAxis) not in playerAdjacentPositions:
+                if grid[xAxis][yAxis].isClear():
+                    hurdleCount += 1
+                    break
 
         hurdle = random.randint(1, 2)
         if hurdle== 1:
@@ -299,17 +307,16 @@ def main():
     state = GameState()
     start(state)
     # make sure the grid has at least a 3x3 grid size, for it to work properly
-    state.grid, playerLocation = generateGrid(state.gridSize)
+    state.grid, playerLocation, playerAdjacentPositions = generateGrid(state.gridSize)
     state.grid, state.goldCount = generateGold(state.grid, state.gridSize)
     state.playersLocation, state.newPlayersLocation = playerLocation, playerLocation
-    state.grid, state.hurdleCount = generateHurdles(state.grid, state.gridSize)
+    state.grid, state.hurdleCount = generateHurdles(state.grid, state.gridSize, playerAdjacentPositions)
 
     while True:
         draw(state)
         move = getUserInput()
         movePlayer(state, move)
         update(state)
-
 
 if __name__ == "__main__":
     main()
