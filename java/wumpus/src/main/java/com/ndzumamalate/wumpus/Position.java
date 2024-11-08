@@ -9,6 +9,7 @@ public class Position {
     private boolean hasBreeze;
     private boolean hasStench;
     private boolean hasGold;
+    private boolean beenTraversed;
 
     public Position(int x, int y) {
         this.x = x;
@@ -19,6 +20,7 @@ public class Position {
         this.hasBreeze = false;
         this.hasStench = false;
         this.hasGold = false;
+        this.beenTraversed = false;
     }
 
     public boolean hasWumpus() {
@@ -90,6 +92,14 @@ public class Position {
         this.hasPlayer = hasPlayer;
     }
 
+    public boolean hasBeenTraversed() {
+        return beenTraversed;
+    }
+
+    public void setBeenTraversed(boolean beenTraversed) {
+        this.beenTraversed = beenTraversed;
+    }
+
     public void resetRoom() {
         hasWumpus = false;
         hasPit = false;
@@ -97,5 +107,6 @@ public class Position {
         hasBreeze = false;
         hasGold = false;
         hasPlayer = false;
+        beenTraversed = false;
     }
 }
