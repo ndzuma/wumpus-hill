@@ -11,6 +11,10 @@ package com.ndzumamalate.wumpus;
 public class Wumpus {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        Game game = new Game();
+        Display dis = new Display();
+        game.setDisplay(dis);
+        game.startGame();
+        //System.out.println();
     }
 }
