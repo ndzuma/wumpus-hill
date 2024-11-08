@@ -43,6 +43,23 @@ public class Display {
         return board;
     }
 
+    public void clearTerminal() {
+        try {
+            // Check the OS name to determine the appropriate command
+            String os = System.getProperty("os.name").toLowerCase();
+
+            if (os.contains("win")) {
+                // For Windows
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else if (os.contains("nix") || os.contains("nux") || os.contains("mac")) {
+                // For Unix, Linux, or macOS
+                new ProcessBuilder("clear").inheritIO().start().waitFor();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void header() {}
 
     public void stats() {}
