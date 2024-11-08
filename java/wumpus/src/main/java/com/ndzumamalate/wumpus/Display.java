@@ -6,7 +6,7 @@ public class Display {
     private Scanner scanner = new Scanner(System.in);
 
     public String getPlayerInput() {
-        return scanner.nextLine();
+        return scanner.nextLine().toLowerCase();
     }
 
     public void landing() {}

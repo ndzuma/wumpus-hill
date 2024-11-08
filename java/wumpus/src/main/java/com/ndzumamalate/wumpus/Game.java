@@ -32,8 +32,10 @@ public class Game {
         placePlayer(5);
         this.board = new Board(5, this.player.getxPosition(), this.player.getyPosition());
         while (!isGameOver) {
+            display.clearTerminal();
             System.out.println(display.board(5, this.board));
-            display.getPlayerInput();
+
+            String input =  display.getPlayerInput();
         }
     }
 
@@ -51,6 +53,6 @@ public class Game {
     }
 
     public void handleInput(String command) {
-
+        if (command.equals("w"))
     }
 }
