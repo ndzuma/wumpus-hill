@@ -11,36 +11,44 @@ public class Display {
 
     public void landing() {}
 
+    public void game(int size, Board gameBoard) {
+        System.out.println(this.header());
+        System.out.println(this.stats());
+        System.out.println(this.legend());
+        System.out.println(this.board(size, gameBoard));
+        System.out.println(this.controls());
+    }
+
     public String board(int size, Board gameBoard) {
         // The separators
-        String separator = "";
+        StringBuilder separator = new StringBuilder();
         for (int i = 0; i < size; i++) {
-            separator += "+⎯⎯⎯⎯⎯⎯";
+            separator.append("+⎯⎯⎯⎯⎯⎯");
         }
-        separator += "+";
+        separator.append("+");
 
         // The tiles
-        String board = "";
+        StringBuilder board = new StringBuilder();
         for (int x = 0; x < size; x++) {
-            board += separator + "\n";
+            board.append(separator).append("\n");
             for (int y = 0; y < size; y++) {
                 Position tile = gameBoard.getPosition(x, y);
                 if (tile.hasPlayer()) {
-                    board += "|  🧍🏽‍♂️  ";
+                    board.append("|  🧍🏽‍♂️  ");
                 } else if (tile.hasWumpus()) {
-                    board += "|   W  ";
+                    board.append("|   W  ");
                 } else if (tile.hasPit()) {
-                    board += "|  Pi  ";
+                    board.append("|  Pi  ");
                 } else if (tile.hasGold()) {
-                    board += "|  Gld ";
+                    board.append("|  Gld ");
                 } else {
-                    board += "|      ";
+                    board.append("|      ");
                 }
             }
-            board += "|\n";
+            board.append("|\n");
         }
-        board += separator;
-        return board;
+        board.append(separator).append("\n");
+        return board.toString();
     }
 
     public void clearTerminal() {
@@ -60,13 +68,31 @@ public class Display {
         }
     }
 
-    public void header() {}
+    public String header() {
+        return """
 
-    public void stats() {}
 
-    public void legend() {}
+██╗    ██╗██╗   ██╗███╗   ███╗██████╗ ██╗   ██╗███████╗███████╗███████╗
+██║    ██║██║   ██║████╗ ████║██╔══██╗██║   ██║██╔════╝██╔════╝██╔════╝
+██║ █╗ ██║██║   ██║██╔████╔██║██████╔╝██║   ██║███████╗███████╗███████╗
+██║███╗██║██║   ██║██║╚██╔╝██║██╔═══╝ ██║   ██║╚════██║╚════██║╚════██║
+╚███╔███╔╝╚██████╔╝██║ ╚═╝ ██║██║     ╚██████╔╝███████║███████║███████║
+ ╚══╝╚══╝  ╚═════╝ ╚═╝     ╚═╝╚═╝      ╚═════╝ ╚══════╝╚══════╝╚══════╝
 
-    public void controls() {}
+""";
+    }
+
+    public String stats() {
+        return "Stats:\n\nPlayer's Points:\nPlayer's Gold:\n";
+    }
+
+    public String legend() {
+        return "Legend:\n\n🧍🏽‍♂️ = Player, 🏠 = Start Position\nGld = Gold, b = Breeze, s = Stench\n";
+    }
+
+    public String controls() {
+        return "Controls:\n\nw = up, s = down, a = left, d = right\nq = quit, e = Hint\n\nNote: Just avoid the arrow keys\n";
+    }
 
     public void gameOver() {}
 }

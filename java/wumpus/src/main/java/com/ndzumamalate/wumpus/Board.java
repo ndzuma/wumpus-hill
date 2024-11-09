@@ -97,4 +97,8 @@ public class Board {
     public Position getPosition(int x, int y) {
         return board[x][y];
     }
+
+    public int getBoardSize() {
+        return boardSize;
+    }
 }
