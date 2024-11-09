@@ -63,6 +63,10 @@ public class Position {
         return hasGold;
     }
 
+    public void removeGold() {
+        this.hasGold = false;
+    }
+
     public void setGold(boolean hasGold) {
         if (!this.hasPit && !this.hasWumpus) {
             this.hasGold = hasGold;

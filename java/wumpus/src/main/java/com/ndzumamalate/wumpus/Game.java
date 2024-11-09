@@ -8,13 +8,11 @@ public class Game {
     private Display display;
     private Player player;
     private Board board;
-    private int points;
-    private int goldAcquired;
-    private int movesTaken;
-    private int hintsUsed;
+    private Stats stats;
 
     public Game() {
         this.player = new Player();
+        this.stats = new Stats();
     }
 
     public void setDisplay(Display display) {
@@ -32,10 +30,6 @@ public class Game {
     public void startGame(int size) {
         placePlayer(size);
         this.board = new Board(size, this.player.getxPosition(), this.player.getyPosition());
-        this.points = 100;
-        this.goldAcquired = 0;
-        this.movesTaken = 0;
-        this.hintsUsed = 0;
         while (!isGameOver) {
             display.clearTerminal();
             display.game(size, this.board);
@@ -56,6 +50,10 @@ public class Game {
         this.player.setyPosition(playerPositionY);
     }
 
+    private void getStats() {
+
+    }
+
     private void handleInput(String command) {
         int x = this.player.getxPosition();
         int y = this.player.getyPosition();
@@ -65,7 +63,12 @@ public class Game {
                     this.player.setxPosition(x - 1);
                     this.board.getPosition(x, y).setPlayer(false);
                     this.board.getPosition((x - 1), y).setPlayer(true);
-                } else {this.isGameOver = true;}
+                    this.stats.moveTaken();
+                    if (this.board.getPosition((x - 1), y).hasGold()) {
+                        this.stats.goldAcquired();
+                        this.board.getPosition((x - 1), y).removeGold();
+                    }
+                } else {this.isGameOver = true; this.stats.foundHurdle();}
             } else {System.out.println("You can't move up");}
         } else if (Direction.DOWN.matches(command)) {
             if (x != this.board.getBoardSize()-1) {
@@ -73,7 +76,12 @@ public class Game {
                     this.player.setxPosition(x + 1);
                     this.board.getPosition(x, y).setPlayer(false);
                     this.board.getPosition((x + 1), y).setPlayer(true);
-                } else {this.isGameOver = true;}
+                    this.stats.moveTaken();
+                    if (this.board.getPosition((x + 1), y).hasGold()) {
+                        this.stats.goldAcquired();
+                        this.board.getPosition((x + 1), y).removeGold();
+                    }
+                } else {this.isGameOver = true; this.stats.foundHurdle();}
             } else {System.out.println("You can't move down");}
         } else if (Direction.LEFT.matches(command)) {
             if (y != 0) {
@@ -81,7 +89,12 @@ public class Game {
                     this.player.setyPosition(y - 1);
                     this.board.getPosition(x, y).setPlayer(false);
                     this.board.getPosition(x, (y - 1)).setPlayer(true);
-                } else {this.isGameOver = true;}
+                    this.stats.moveTaken();
+                    if (this.board.getPosition(x, (y - 1)).hasGold()) {
+                        this.stats.goldAcquired();
+                        this.board.getPosition(x, (y - 1)).removeGold();
+                    }
+                } else {this.isGameOver = true; this.stats.foundHurdle();}
             } else {System.out.println("You can't move left");}
         } else if (Direction.RIGHT.matches(command)) {
             if (y != this.board.getBoardSize()-1) {
@@ -89,7 +102,12 @@ public class Game {
                     this.player.setyPosition(y + 1);
                     this.board.getPosition(x, y).setPlayer(false);
                     this.board.getPosition(x, (y + 1)).setPlayer(true);
-                } else {this.isGameOver = true;}
+                    this.stats.moveTaken();
+                    if (this.board.getPosition(x, (y + 1)).hasGold()) {
+                        this.stats.goldAcquired();
+                        this.board.getPosition(x, (y + 1)).removeGold();
+                    }
+                } else {this.isGameOver = true; this.stats.foundHurdle();}
             } else {System.out.println("You can't move right");}
         } else if (GameCommands.QUIT.matches(command)) {
             System.out.println("Are you sure you want to quit? (y/n)");
