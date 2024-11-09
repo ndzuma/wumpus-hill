@@ -14,7 +14,7 @@ public class Wumpus {
         Game game = new Game();
         Display dis = new Display();
         game.setDisplay(dis);
-        game.startGame();
+        game.startGame(5);
         //System.out.println();
     }
 }
