@@ -9,6 +9,8 @@ public class Game {
     private Player player;
     private Board board;
     private Stats stats;
+    private int gridSize = 0;
+    private int[] allowedGridSizes = {3, 5, 10,15};
 
     public Game() {
         this.player = new Player();
@@ -27,14 +29,46 @@ public class Game {
         this.player = player;
     }
 
-    public void startGame(int size) {
-        placePlayer(size);
-        this.board = new Board(size, this.player.getxPosition(), this.player.getyPosition());
+    public void startGame() {
+        int currentSelection = 0;
+        while (this.gridSize == 0) {
+            display.clearTerminal();
+            display.gameLanding(this.allowedGridSizes, currentSelection);
+            String input = display.getPlayerInput();
+            switch (input) {
+                case "w":
+                    if (currentSelection == 0) {
+                        currentSelection = this.allowedGridSizes.length - 1;
+                    } else {
+                        currentSelection--;
+                    }
+                    break;
+                case "s":
+                    if (currentSelection == this.allowedGridSizes.length - 1) {
+                        currentSelection = 0;
+                    } else {
+                        currentSelection++;
+                    }
+                    break;
+                case "q":
+                    handleInput(input);
+                    break;
+                case "":
+                    this.gridSize = this.allowedGridSizes[currentSelection];
+                    break;
+                default:
+                    break;
+            }
+        }
+        placePlayer(this.gridSize);
+        this.board = new Board(this.gridSize, this.player.getxPosition(), this.player.getyPosition());
         while (!isGameOver) {
             display.clearTerminal();
-            display.game(size, this.board);
+            display.game(this.gridSize, this.board, this.stats);
             handleInput(display.getPlayerInput());
         }
+        display.clearTerminal();
+        display.gameOver(this.gridSize, this.board, this.stats);
     }
 
     private void placePlayer(int size) {
@@ -48,10 +82,6 @@ public class Game {
         }
         this.player.setxPosition(playerPositionX);
         this.player.setyPosition(playerPositionY);
-    }
-
-    private void getStats() {
-
     }
 
     private void handleInput(String command) {
@@ -110,10 +140,10 @@ public class Game {
                 } else {this.isGameOver = true; this.stats.foundHurdle();}
             } else {System.out.println("You can't move right");}
         } else if (GameCommands.QUIT.matches(command)) {
-            System.out.println("Are you sure you want to quit? (y/n)");
+            System.out.println("Are you sure you want to quit? (y/n/enter)");
             String input = display.getPlayerInput().toLowerCase();
             switch (input) {
-                case "y", "\r", "\n":
+                case "y", "\r", "\n", "":
                     System.out.println("Game Over!");
                     System.exit(0);
                     break;

@@ -55,7 +55,7 @@ def drawStartGame(State, options, selectedOption):
         if i == options[selectedOption]:
             print(f"[bold yellow]> {i}[/]")
         else:
-            print("> ",i)
+            print(">",i)
 
 def drawEndGame(State):
     clearScreen()
