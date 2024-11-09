@@ -31,7 +31,7 @@ def draw(State, notification: bool = False):
     banner()
     print("Stats:\n")
     print("Player's Points: ", State.playersPoints)
-    print("Player's Gold: ", State.playersGold)
+    print("Player's Gold: ", State.playersGold, "\n")
     print("Legend:\n")
     print("🧍🏽‍♂️ = Player, 🏠 = Start Position")
     print("[yellow]Gld[/] = Gold, [red]b[/] = Breeze, [red]s[/] = Stench\n")
