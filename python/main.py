@@ -218,7 +218,7 @@ def movePlayer(State, move):
         else:
             State.newPlayersLocation = (State.playersLocation[0], State.playersLocation[1] + 1)
     elif move == "Q":
-        print("Are you sure you want to quit? (y/n)")
+        print("Are you sure you want to quit? (y/n/enter)")
         quitGame = getUserInput()
         if quitGame == "\r" or quitGame == "\n" or quitGame == "Y":
             print("Game Over!")
