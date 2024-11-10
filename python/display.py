@@ -39,7 +39,7 @@ def draw(State, notification: bool = False):
     print("\nControls:")
     print("\nw = up, s = down, a = left, d = right")
     print("q = quit, e = Hint\n")
-    print("Note:\n- Just avoid the arrow keys\n- Going home ends the game(which is intended)\n")
+    print("Note:\n- Just avoid the arrow keys\n- Going home ends the game (which is intended)\n")
     if notification:
         goldFound()
 
