@@ -95,7 +95,7 @@ public class Game {
         int y = this.player.getyPosition();
         if (Direction.UP.matches(command)) {
             if (x != 0) {
-                if (!this.board.getPosition((x - 1), y).hasHurdles()) {
+                if (!this.board.getPosition((x - 1), y).hasHurdles() && !this.board.getPosition((x - 1), y).isStart()) {
                     this.player.setxPosition(x - 1);
                     this.board.getPosition(x, y).setPlayer(false);
                     this.board.getPosition((x - 1), y).setPlayer(true);
@@ -109,7 +109,7 @@ public class Game {
             } else {System.out.println("You can't move up");}
         } else if (Direction.DOWN.matches(command)) {
             if (x != this.board.getBoardSize()-1) {
-                if (!this.board.getPosition((x + 1), y).hasHurdles()) {
+                if (!this.board.getPosition((x + 1), y).hasHurdles() && !this.board.getPosition((x + 1), y).isStart()) {
                     this.player.setxPosition(x + 1);
                     this.board.getPosition(x, y).setPlayer(false);
                     this.board.getPosition((x + 1), y).setPlayer(true);
@@ -123,7 +123,7 @@ public class Game {
             } else {System.out.println("You can't move down");}
         } else if (Direction.LEFT.matches(command)) {
             if (y != 0) {
-                if (!this.board.getPosition(x, (y - 1)).hasHurdles()) {
+                if (!this.board.getPosition(x, (y - 1)).hasHurdles() && !this.board.getPosition(x, (y - 1)).isStart()) {
                     this.player.setyPosition(y - 1);
                     this.board.getPosition(x, y).setPlayer(false);
                     this.board.getPosition(x, (y - 1)).setPlayer(true);
@@ -137,7 +137,7 @@ public class Game {
             } else {System.out.println("You can't move left");}
         } else if (Direction.RIGHT.matches(command)) {
             if (y != this.board.getBoardSize()-1) {
-                if (!this.board.getPosition(x, (y + 1)).hasHurdles()) {
+                if (!this.board.getPosition(x, (y + 1)).hasHurdles() && !this.board.getPosition(x, (y + 1)).isStart()) {
                     this.player.setyPosition(y + 1);
                     this.board.getPosition(x, y).setPlayer(false);
                     this.board.getPosition(x, (y + 1)).setPlayer(true);

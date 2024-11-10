@@ -138,7 +138,7 @@ public class Display {
     }
 
     public String controls() {
-        return "Controls:\n\nw = up, s = down, a = left, d = right\nq = quit, e = Hint\n\nNote: Just avoid the arrow keys\n";
+        return "Controls:\n\nw = up, s = down, a = left, d = right\nq = quit, e = Hint\n\nNotes:\n- Just avoid the arrow keys\n- Going home ends the game(which is intended)\n";
     }
 
     public void clearTerminal() {
