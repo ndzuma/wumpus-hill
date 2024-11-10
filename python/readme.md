@@ -1,20 +1,31 @@
-#  Wumpus game in python
+# Wumpus Game in Python
 
-This is my very scappy implementation of the Wumpus game in python.
-I did this to learn more about python and to have some fun.
-I hope you enjoy it.
+This is my implementation of the Wumpus game in Python. It's part of a larger project where I'm creating the same game in Python, Java, and Go to learn more about these languages and have some fun.
 
-The idea came about after having my Artificial intelligence fundamentals class where my lecurer introduced us to the game.
+## About the Implementation
 
-So I decided to implement it in Python, Java and GO (Still working on the GO implementation).
+This Python version of the Wumpus game is part of a multi-language implementation project. The idea came from my Artificial Intelligence fundamentals class, where my lecturer introduced us to the game. As Python is the language I'm most comfortable with, this implementation served as the foundation for the other versions.
 
-## Timeline:
+## How to Play
 
-this took me 3 days to complete, I started on a friday after the class, and finished on a Monday(didn't work on it on the weekend, apart from maybe an hour) at univerisy.
+1. Clone the repo
+2. Navigate to the Python directory
+3. Install the required dependencies:
+   ```bash
+   pip install -r requirements.txt
+    ```
+4. Run the game using the following command:
+    ```bash
+   python main.py
+    ```
+5. Enjoy the game and happy gaming!
 
-## How to play
-- Clone the repo
-- Navigate to the directory
-- install the requirements from the requirements.txt file using the command `pip install -r requirements.txt`
-- Run the game using the command `python main.py`
-- Run the game
+## Timeline
+
+The Python implementation was the first one I completed, taking approximately 2 day of focused work. It served as the blueprint for the Java and Go versions, which were developed subsequently.
+
+## Feedback and Contributions
+
+While Python is my strongest language, I'm always looking to improve. If you have any suggestions for code optimization, better Pythonic practices, or additional features, please feel free to open an issue or submit a pull request!
+
+ps: I know the code is slopppy, I did it in a hurry, I will clean it up later (maybe).
