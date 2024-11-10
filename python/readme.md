@@ -6,9 +6,11 @@ I hope you enjoy it.
 
 The idea came about after having my Artificial intelligence fundamentals class where my lecurer introduced us to the game.
 
-So I decided to implement it in Python, Java and GO (Still working on the others).
+So I decided to implement it in Python, Java and GO (Still working on the GO implementation).
 
-Timeline: this took me 3 days to complete, I started on a friday after the class, and finished on a Monday(didn't work on it on the weekend, apart from maybe an hour) at univerisy.
+## Timeline:
+
+this took me 3 days to complete, I started on a friday after the class, and finished on a Monday(didn't work on it on the weekend, apart from maybe an hour) at univerisy.
 
 ## How to play
 - Clone the repo
