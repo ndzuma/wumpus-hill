@@ -1,6 +1,7 @@
 package com.ndzumamalate.wumpus;
 
 import java.util.Random;
+import java.io.IOException;
 
 
 public class Game {
@@ -34,7 +35,7 @@ public class Game {
         while (this.gridSize == 0) {
             display.clearTerminal();
             display.gameLanding(this.allowedGridSizes, currentSelection);
-            String input = display.getPlayerInput();
+            String input = GameInput.getNormalInput();
             switch (input) {
                 case "w":
                     if (currentSelection == 0) {
@@ -59,13 +60,18 @@ public class Game {
                 default:
                     break;
             }
+            try {
+                Thread.sleep(100);  // 100 milliseconds (adjust as needed)
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         placePlayer(this.gridSize);
         this.board = new Board(this.gridSize, this.player.getxPosition(), this.player.getyPosition());
         while (!isGameOver) {
             display.clearTerminal();
             display.game(this.gridSize, this.board, this.stats, this.isGameOver);
-            handleInput(display.getPlayerInput());
+            handleInput(GameInput.getNormalInput());
         }
         display.clearTerminal();
         display.gameOver(this.gridSize, this.board, this.stats, this.isGameOver);
@@ -145,7 +151,7 @@ public class Game {
             } else {System.out.println("You can't move right");}
         } else if (GameCommands.QUIT.matches(command)) {
             System.out.println("Are you sure you want to quit? (y/n/enter)");
-            String input = display.getPlayerInput().toLowerCase();
+            String input = GameInput.getNormalInput().toLowerCase();
             switch (input) {
                 case "y", "\r", "\n", "":
                     System.out.println("Game Over!");

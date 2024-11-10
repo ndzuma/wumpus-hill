@@ -3,12 +3,6 @@ package com.ndzumamalate.wumpus;
 import java.util.Scanner;
 
 public class Display {
-    private Scanner scanner = new Scanner(System.in);
-
-    public String getPlayerInput() {
-        return scanner.nextLine().toLowerCase();
-    }
-
     public void gameLanding(int[] allowedGridSizes, int selected) {
         System.out.println(this.header());
         System.out.println("Welcome to the Wumpus World Game!\n");

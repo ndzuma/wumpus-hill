@@ -2,6 +2,8 @@
 
 This is my implementation of the Wumpus game in Java. It's part of a larger project where I'm creating the same game in Python, Java, and Go to learn more about these languages and have some fun.
 
+Note: Because I didn't want to mess with Raw mode on the terminal, every key stroke will have to be followed by "Enter". You could try the python implementation to use it the intended way. 
+
 ## How to Play
 
 1. Clone the repo
