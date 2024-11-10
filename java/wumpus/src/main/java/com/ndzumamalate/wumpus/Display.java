@@ -24,23 +24,72 @@ public class Display {
         }
     }
 
-    public void game(int size, Board gameBoard, Stats stats) {
+    public void game(int size, Board gameBoard, Stats stats, boolean isGameOver) {
         System.out.println(this.header());
         System.out.println(this.stats(stats));
         System.out.println(this.legend());
-        System.out.println(this.board(size, gameBoard));
+        System.out.println(this.board(size, gameBoard, isGameOver));
         System.out.println(this.controls());
     }
 
-    public void gameOver(int size, Board gameBoard, Stats stats) {
+    public void gameOver(int size, Board gameBoard, Stats stats, boolean isGameOver) {
         System.out.println(this.header());
         System.out.println(this.endStats(stats));
         System.out.println("Last frame:\n");
-        System.out.println(this.board(size, gameBoard));
+        System.out.println(this.board(size, gameBoard, isGameOver));
         System.out.println("Game Over!");
     }
 
-    public String board(int size, Board gameBoard) {
+    // This one is a bit strange, so ill leave this here for future me (that's if I even come back)
+    public String formatChar(Position tile, boolean gameOver) {
+        // This section varies and even thought I could have made a simple switch statement
+        // I wanted to see if I could make a formater so that the board method looked better :)
+        StringBuilder c =new StringBuilder();
+
+        //This is because of the colour "thingies", they change the length
+        // This is the simplest way to implement this, also idc if it isn't rn, it's 11:30pm
+        int cLength = 0;
+
+        // This section return these specif 3 because it doesn't matter what else is in the tile
+        // They are the only thing that need to be displayed
+
+        if (!tile.hasBeenTraversed() && !gameOver) {
+            return "|   ?  ";
+        } else if (tile.hasPlayer()) {
+            c.append("🧍🏽‍♂️");
+            cLength++;
+        } else if (tile.isStart()) {
+            return "|  🏠  ";
+        } else if (tile.hasWumpus()) {
+            return "|   W  ";
+        } else if (tile.hasPit()) {
+            return "|  Pi  ";
+        }
+
+        if (tile.hasGold()) {c.append("\033[33mGld\033[0m "); cLength+=4;}
+        if (tile.hasBreeze()) {c.append("\033[31mb\033[0m"); cLength++;}
+        if (tile.hasStench()) {c.append("\033[31ms\033[0m"); cLength++;}
+        if (!c.isEmpty()) {
+            int freeSpace = (6 - cLength);
+            if (freeSpace > 1) {
+                int leftPadding = Math.min(freeSpace / 2, freeSpace - (freeSpace / 2));
+                int rightPadding = Math.max(freeSpace / 2, freeSpace - (freeSpace / 2));
+
+                if (tile.hasPlayer() && leftPadding > 0) {
+                    leftPadding -= 1;
+                }
+
+                return "|" + " ".repeat(leftPadding) + c + " ".repeat(rightPadding);
+            } else {
+                // this repeat is to guarantee the tile is the desired size at the end
+                return "|" + c + " ".repeat(freeSpace);
+            }
+        }
+        return"|      ";
+
+    }
+
+    public String board(int size, Board gameBoard, boolean isGameOver) {
         // The separators
         StringBuilder separator = new StringBuilder();
         for (int i = 0; i < size; i++) {
@@ -54,17 +103,7 @@ public class Display {
             board.append(separator).append("\n");
             for (int y = 0; y < size; y++) {
                 Position tile = gameBoard.getPosition(x, y);
-                if (tile.hasPlayer()) {
-                    board.append("|  🧍🏽‍♂️  ");
-                } else if (tile.hasWumpus()) {
-                    board.append("|   W  ");
-                } else if (tile.hasPit()) {
-                    board.append("|  Pi  ");
-                } else if (tile.hasGold()) {
-                    board.append("|  Gld ");
-                } else {
-                    board.append("|      ");
-                }
+                board.append(formatChar(tile, isGameOver));
             }
             board.append("|\n");
         }
@@ -88,7 +127,7 @@ public class Display {
 
     public String stats(Stats stats) {
         String points = "Player's Points: " + stats.getPoints() + "\n";
-        String gold = "Player's Gold:" + stats.getGoldAcquired() + "\n";
+        String gold = "Player's Gold: " + stats.getGoldAcquired() + "\n";
         return "Stats:\n\n" + points + gold;
     }
 
@@ -101,7 +140,7 @@ public class Display {
     }
 
     public String legend() {
-        return "Legend:\n\n🧍🏽‍♂️ = Player, 🏠 = Start Position\nGld = Gold, b = Breeze, s = Stench\n";
+        return "Legend:\n\n🧍🏽‍♂️ = Player, 🏠 = Start Position\n\033[33mGld\033[0m = Gold, \033[31mb\033[0m = Breeze, \033[31ms\033[0m = Stench\n";
     }
 
     public String controls() {

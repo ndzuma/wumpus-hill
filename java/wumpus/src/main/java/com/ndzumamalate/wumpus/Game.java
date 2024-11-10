@@ -64,11 +64,11 @@ public class Game {
         this.board = new Board(this.gridSize, this.player.getxPosition(), this.player.getyPosition());
         while (!isGameOver) {
             display.clearTerminal();
-            display.game(this.gridSize, this.board, this.stats);
+            display.game(this.gridSize, this.board, this.stats, this.isGameOver);
             handleInput(display.getPlayerInput());
         }
         display.clearTerminal();
-        display.gameOver(this.gridSize, this.board, this.stats);
+        display.gameOver(this.gridSize, this.board, this.stats, this.isGameOver);
     }
 
     private void placePlayer(int size) {
@@ -93,6 +93,7 @@ public class Game {
                     this.player.setxPosition(x - 1);
                     this.board.getPosition(x, y).setPlayer(false);
                     this.board.getPosition((x - 1), y).setPlayer(true);
+                    this.board.getPosition((x - 1), y).setTraversed();
                     this.stats.moveTaken();
                     if (this.board.getPosition((x - 1), y).hasGold()) {
                         this.stats.goldAcquired();
@@ -106,6 +107,7 @@ public class Game {
                     this.player.setxPosition(x + 1);
                     this.board.getPosition(x, y).setPlayer(false);
                     this.board.getPosition((x + 1), y).setPlayer(true);
+                    this.board.getPosition((x + 1), y).setTraversed();
                     this.stats.moveTaken();
                     if (this.board.getPosition((x + 1), y).hasGold()) {
                         this.stats.goldAcquired();
@@ -119,6 +121,7 @@ public class Game {
                     this.player.setyPosition(y - 1);
                     this.board.getPosition(x, y).setPlayer(false);
                     this.board.getPosition(x, (y - 1)).setPlayer(true);
+                    this.board.getPosition(x, (y - 1)).setTraversed();
                     this.stats.moveTaken();
                     if (this.board.getPosition(x, (y - 1)).hasGold()) {
                         this.stats.goldAcquired();
@@ -132,6 +135,7 @@ public class Game {
                     this.player.setyPosition(y + 1);
                     this.board.getPosition(x, y).setPlayer(false);
                     this.board.getPosition(x, (y + 1)).setPlayer(true);
+                    this.board.getPosition(x, (y + 1)).setTraversed();
                     this.stats.moveTaken();
                     if (this.board.getPosition(x, (y + 1)).hasGold()) {
                         this.stats.goldAcquired();
@@ -154,6 +158,7 @@ public class Game {
             System.out.println("Hints:");
             System.out.println("Number of dangers left:");
             System.out.println("Number of gold left:");
+            this.stats.hintUsed();
         } else {
             System.out.println("Invalid command");
         }

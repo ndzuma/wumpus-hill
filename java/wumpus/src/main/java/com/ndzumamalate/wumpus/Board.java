@@ -18,6 +18,8 @@ public class Board {
 
         // add player to board
         this.board[playerX][playerY].setPlayer(true);
+        this.board[playerX][playerY].setStart();
+        this.board[playerX][playerY].setTraversed();
         generateHazards();
         generateGold();
     }

@@ -10,6 +10,7 @@ public class Position {
     private boolean hasStench;
     private boolean hasGold;
     private boolean beenTraversed;
+    private boolean isStart;
 
     public Position(int x, int y) {
         this.x = x;
@@ -21,6 +22,14 @@ public class Position {
         this.hasStench = false;
         this.hasGold = false;
         this.beenTraversed = false;
+    }
+
+    public void setStart() {
+        isStart = true;
+    }
+
+    public boolean isStart() {
+        return isStart;
     }
 
     public boolean hasWumpus() {
@@ -100,8 +109,8 @@ public class Position {
         return beenTraversed;
     }
 
-    public void setBeenTraversed(boolean beenTraversed) {
-        this.beenTraversed = beenTraversed;
+    public void setTraversed() {
+        this.beenTraversed = true;
     }
 
     public void resetRoom() {
