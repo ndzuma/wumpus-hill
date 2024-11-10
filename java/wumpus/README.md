@@ -2,7 +2,7 @@
 
 This is my implementation of the Wumpus game in Java. It's part of a larger project where I'm creating the same game in Python, Java, and Go to learn more about these languages and have some fun.
 
-Note: Because I didn't want to mess with Raw mode on the terminal, every key stroke will have to be followed by "Enter". You could try the python implementation to use it the intended way. 
+Note: Because I didn't want to mess with Raw mode on the terminal, every key stroke will have to be followed by "Enter". You could try the python implementation to use it the intended way.
 
 ## How to Play
 
@@ -11,12 +11,12 @@ Note: Because I didn't want to mess with Raw mode on the terminal, every key str
 3. Compile the game using the following command:
    ```bash
    javac com/ndzumamalate/wumpus/Wumpus.java
-   
+
 4. Compile the game using the following command:
    ```bash
    java com.ndzumamalate.wumpus.Wumpus
-
-Enjoy the game and happy gaming!
+    ```
+5. Enjoy the game and happy gaming!
 
 # About the Implementation
 
